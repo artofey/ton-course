@@ -30,7 +30,7 @@ async function onchainTestScript() {
   console.log("Successfully");
 
   let link =
-    `https://tonhub.com/transfer/` +
+    `https://test.tonhub.com/transfer/` +
     address.toString({ testOnly: true }) +
     "?" +
     qs.stringify({
