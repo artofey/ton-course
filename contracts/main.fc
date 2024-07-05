@@ -9,7 +9,7 @@
 
     if (op == 1) {
         ;; counter logic is comming here
-        slice ds = get_date().begin_parse();
+        slice ds = get_data().begin_parse();
         int counter = ds~load_uint(32);
         set_data(
             begin_cell().store_uint(counter + 1, 32).store_slice(sender_address).end_cell()
