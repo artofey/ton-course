@@ -1,53 +1,25 @@
-import { hex } from "../build/main.compiled.json";
-import {
-  beginCell,
-  Cell,
-  contractAddress,
-  StateInit,
-  storeStateInit,
-  toNano,
-} from "ton-core";
-import qs from "qs";
-import qrcode from "qrcode-terminal";
+import { address, toNano } from "ton-core";
+import { compile, NetworkProvider } from "@ton-community/blueprint";
+import { MainContract } from "../wrappers/MainContract";
 
-async function deployScript() {
-  console.log(
-    "================================================================="
+export async function run(provider: NetworkProvider) {
+  const myContract = MainContract.createFromConfig(
+    {
+      number: 0,
+      address: address("0QAS76qHG-0PGU4kzbRx3briNUiGCPF9NNXHxEVUpsnX7qe0"),
+      owner_address: address(
+        "0QAS76qHG-0PGU4kzbRx3briNUiGCPF9NNXHxEVUpsnX7qe0"
+      ),
+    },
+    await compile("MainContract")
   );
-  console.log("Deploy script is running, let's deploy our main.fc contract...");
 
-  const codeCell = Cell.fromBoc(Buffer.from(hex, "hex"))[0];
-  const dataCell = new Cell();
+  const openedContract = provider.open(myContract)
 
-  const stateInit: StateInit = {
-    code: codeCell,
-    data: dataCell,
-  };
+  openedContract.sendDeploy(provider.sender(), toNano("0.05"));
 
-  const stateInitBuilder = beginCell();
-  storeStateInit(stateInit)(stateInitBuilder);
-  const stateCellInit = stateInitBuilder.endCell();
-
-  const address = contractAddress(0, stateInit);
-
-  console.log(
-    `The address of the contract is following: ${address.toString()}`
-  );
-  console.log(`Please scan the QR code below to deploy the contract:`);
-
-  let link =
-    `https://tonhub.com/transfer/` +
-    address.toString({ testOnly: true }) +
-    "?" +
-    qs.stringify({
-      text: "Deploy contract",
-      amount: toNano(1).toString(10),
-      init: stateCellInit.toBoc({ idx: false }).toString("base64"),
-    });
-
-  qrcode.generate(link, { small: true }, (code) => {
-    console.log(code);
-  });
+  await provider.waitForDeploy(myContract.address);
 }
 
-deployScript();
+// address in testnet
+// EQC4aCZ375yRwjh-HsAQV8Qw7qMC6pMP1uyUh2HujFTKrJph

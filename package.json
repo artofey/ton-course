@@ -3,19 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npm run compile && jest",
-    "compile": "ts-node ./scripts/compile.ts",
-    "deploy:testnet": "npm run compile && ts-node ./scripts/deploy.ts",
-    "onchaintest": "ts-node ./scripts/onchaintest.ts"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
     "@swc/core": "^1.6.6",
+    "@ton-community/blueprint": "^0.12.0",
     "@ton-community/func-js": "^0.7.0",
     "@ton-community/sandbox": "^0.11.0",
     "@ton-community/test-utils": "^0.3.0",
+    "@ton/blueprint": "^0.21.0",
     "@types/jest": "^29.5.12",
     "@types/node": "^20.14.9",
     "@types/qrcode-terminal": "^0.12.2",
